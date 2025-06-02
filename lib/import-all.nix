@@ -1,6 +1,6 @@
-# Import all .nix files from a directory and merge them into a single set
+# Import all .nix files from a directory as a set
 dir: let
-  inherit (builtins) readDir pathExists map attrNames listToAttrs foldl' intersectAttrs;
+  inherit (builtins) readDir pathExists map attrNames listToAttrs;
   
   # Read all .nix files from the directory
   files = if pathExists dir 
@@ -11,11 +11,12 @@ dir: let
   nixFiles = map (name: builtins.substring 0 (builtins.stringLength name - 4) name)
     (builtins.filter (name: builtins.match ".*\\.nix" name != null) files);
   
-  # Import each file and get its contents
-  importFile = name: import (dir + "/${name}.nix");
-  
-  # Merge all imported files into a single set
-  mergeInputs = foldl' (acc: input: acc // input) {};
+  # Import each file
+  importFile = name: {
+    name = builtins.head (builtins.attrNames (import (dir + "/${name}.nix")));
+    value = (import (dir + "/${name}.nix"));
+  };
 
 in
-  mergeInputs (map importFile nixFiles)
+  # Create a set of all inputs
+  builtins.foldl' (a: b: a // b) {} (map (x: x.value) (map importFile nixFiles))
