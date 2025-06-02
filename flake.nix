@@ -3,6 +3,5 @@
 
   inputs = (import ./lib/import-all.nix) ./inputs;
 
-  outputs = inputs:
-    (import ./lib/import-outputs.nix inputs) ./outputs;
+  outputs = inputs: (import ./lib/import-outputs.nix) inputs ./outputs;
 }
