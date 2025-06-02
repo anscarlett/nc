@@ -19,8 +19,7 @@ mkdir -p vm-data
 # Build our custom installer ISO if it doesn't exist
 if [ ! -f "vm-data/nixos-installer.iso" ]; then
     echo "Building custom NixOS installer ISO..."
-    nix build .#nixosConfigurations.installer.config.system.build.isoImage --out-link vm-data/installer-result
-    cp vm-data/installer-result/iso/nixos-*.iso vm-data/nixos-installer.iso
+    nix shell nixpkgs#nixos-generators -c nixos-generate -f iso --flake .#installer -o vm-data/nixos-installer.iso
 fi
 
 # Create a disk image if it doesn't exist
