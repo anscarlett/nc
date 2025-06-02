@@ -25,8 +25,17 @@ if [ ! -f "vm-data/$DISK_IMAGE" ]; then
     qemu-img create -f qcow2 "vm-data/$DISK_IMAGE" "$DISK_SIZE"
 fi
 
+# Create mount script
+cat > vm-data/mount-host.sh <<'EOL'
+#!/bin/sh
+mkdir -p /mnt/host
+mount -t 9p -o trans=virtio,version=9p2000.L host /mnt/host
+EOL
+
+chmod +x vm-data/mount-host.sh
+
 echo "Starting VM with NixOS installer..."
-qemu-system-x86_64 \
+exec qemu-system-x86_64 \
     -name "$VM_NAME" \
     -enable-kvm \
     -cpu host \
@@ -40,4 +49,6 @@ qemu-system-x86_64 \
     -vga virtio \
     -display gtk,gl=on \
     -usb \
-    -device usb-tablet
+    -device usb-tablet \
+    -fsdev local,id=host,path=$(pwd),security_model=none \
+    -device virtio-9p-pci,fsdev=host,mount_tag=host

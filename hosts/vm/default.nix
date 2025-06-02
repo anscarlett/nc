@@ -4,6 +4,7 @@
 {
   imports = [
     ../../vm/default.nix
+    ./disko-config.nix
   ];
 
   # Basic system configuration
