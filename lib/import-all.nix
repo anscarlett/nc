@@ -19,8 +19,14 @@ dir: let
   # Filter for .nix files
   nixFiles = builtins.filter (f: builtins.match ".*\.nix" f != null) files;
 
-  # Import each file
-  imported = map (f: import (dir + "/${f}")) nixFiles;
+  # Import each file and handle functions
+  imported = map (f: 
+    let 
+      raw = import (dir + "/${f}");
+      # If it's a function, call it with an empty set
+      value = if builtins.isFunction raw then raw {} else raw;
+    in value
+  ) nixFiles;
 
 in
   # Merge all imported files
