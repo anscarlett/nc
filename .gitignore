@@ -1,0 +1,16 @@
+# Nix build outputs
+result/
+result
+
+# Editor files
+*.swp
+*~
+
+# Local environment
+.direnv/
+.envrc
+
+# VM files
+vm-data/
+*.qcow2
+*.iso
