@@ -1,22 +1,27 @@
-# Import all .nix files from a directory as a set
+# Import all .nix files from a directory
 dir: let
-  inherit (builtins) readDir pathExists map attrNames listToAttrs;
-  
-  # Read all .nix files from the directory
-  files = if pathExists dir 
-    then attrNames (readDir dir)
+  # Helper function to merge two attribute sets
+  recursiveMerge = a: b: 
+    let
+      f = name:
+        if builtins.hasAttr name a && builtins.hasAttr name b &&
+           builtins.isAttrs a.${name} && builtins.isAttrs b.${name}
+        then recursiveMerge a.${name} b.${name}
+        else b.${name};
+    in
+    a // (builtins.mapAttrs f b);
+
+  # Get all .nix files
+  files = if builtins.pathExists dir
+    then builtins.attrNames (builtins.readDir dir)
     else [];
-  
-  # Filter for .nix files and remove extension
-  nixFiles = map (name: builtins.substring 0 (builtins.stringLength name - 4) name)
-    (builtins.filter (name: builtins.match ".*\\.nix" name != null) files);
-  
+
+  # Filter for .nix files
+  nixFiles = builtins.filter (f: builtins.match ".*\.nix" f != null) files;
+
   # Import each file
-  importFile = name: {
-    name = builtins.head (builtins.attrNames (import (dir + "/${name}.nix")));
-    value = (import (dir + "/${name}.nix"));
-  };
+  imported = map (f: import (dir + "/${f}")) nixFiles;
 
 in
-  # Create a set of all inputs
-  builtins.foldl' (a: b: a // b) {} (map (x: x.value) (map importFile nixFiles))
+  # Merge all imported files
+  builtins.foldl' recursiveMerge {} imported
