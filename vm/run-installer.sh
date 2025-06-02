@@ -2,6 +2,9 @@
 
 set -e
 
+# Enable required Nix features
+export NIX_CONFIG="experimental-features = nix-command flakes"
+
 # Configuration
 VM_NAME="nixos-test"
 RAM_SIZE="4G"
@@ -13,10 +16,11 @@ DISK_IMAGE="$VM_NAME.qcow2"
 # Create directory for VM files if it doesn't exist
 mkdir -p vm-data
 
-# Download the ISO if it doesn't exist
+# Build our custom installer ISO if it doesn't exist
 if [ ! -f "vm-data/nixos-installer.iso" ]; then
-    echo "Downloading NixOS 25.05 installer ISO..."
-    curl -L "$ISO_URL" -o "vm-data/nixos-installer.iso"
+    echo "Building custom NixOS installer ISO..."
+    nix build .#nixosConfigurations.installer.config.system.build.isoImage --out-link vm-data/installer-result
+    cp vm-data/installer-result/iso/nixos-*.iso vm-data/nixos-installer.iso
 fi
 
 # Create a disk image if it doesn't exist
