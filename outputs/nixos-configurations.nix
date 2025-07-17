@@ -18,5 +18,5 @@ let
   };
 in
 {
-  builtins.mapAttrs mkHost allHosts;
+  nixosConfigurations = builtins.mapAttrs mkHost allHosts;
 }
