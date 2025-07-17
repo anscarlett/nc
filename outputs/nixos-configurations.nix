@@ -1,6 +1,7 @@
 inputs: {
   nixosConfigurations = let
-    hosts = (import ../lib/mk-hosts.nix { lib = inputs.nixpkgs.lib; }) ../hosts;
+    mkConfigs = import ../lib/mk-configs.nix { lib = inputs.nixpkgs.lib; };
+    hosts = mkConfigs.mkHosts ../hosts;
     mkHost = name: hostConfig: inputs.nixpkgs.lib.nixosSystem {
       inherit (hostConfig) system;
       modules = hostConfig.modules ++ [
