@@ -10,16 +10,6 @@ inputs: {
         inputs.agenix.nixosModules.default
       ];
     };
-
-    # Add installer configuration
-    allHosts = hosts // {
-      installer = {
-        system = "x86_64-linux";
-        modules = [
-          ../hosts/installer/default.nix
-        ];
-      };
-    };
   in
-    builtins.mapAttrs mkHost allHosts;
+    builtins.mapAttrs mkHost hosts;
 }
