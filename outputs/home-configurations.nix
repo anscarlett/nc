@@ -1,6 +1,5 @@
-inputs:
-{
-  homeConfigurations = let
+inputs: {
+  let
     mkConfigs = import ../lib/mk-configs.nix { lib = inputs.nixpkgs.lib; };
     homes = mkConfigs.mkHomes ../homes;
     mkHome = name: homeConfig: inputs.home-manager.lib.homeManagerConfiguration {
