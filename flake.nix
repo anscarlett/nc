@@ -3,9 +3,9 @@
 
   inputs = {
     impermanence.url = "github:nix-community/impermanence";
-    nixpkgs.url = let constants = import ./lib/constants.nix; in "github:NixOS/nixpkgs/${constants.nixVersion}";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
     home-manager = {
-      url = let constants = import ./lib/constants.nix; in "github:nix-community/home-manager/${constants.nixVersion}";
+      url = "github:nix-community/home-manager/nixos-25.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nixos-hardware.url = "github:NixOS/nixos-hardware";
