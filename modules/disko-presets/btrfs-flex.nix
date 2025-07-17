@@ -1,10 +1,11 @@
-{ device ? "/dev/disk/by-id/your-disk"
+{ disk ? "/dev/disk/by-id/your-disk"
 , enableImpermanence ? false
 , enableHibernate ? false
 , swapSize ? null
 , luksName ? "cryptroot"
 , subvolumes ? [ "@" "@home" "@nix" "@persist" ]
 , enableYubikey ? false
+, enableSopsSecrets ? false
 }:
 
 {
@@ -12,7 +13,7 @@
     disk = {
       main = {
         type = "disk";
-        device = device;
+        device = disk;
         content = {
           type = "gpt";
           partitions = {
@@ -38,6 +39,8 @@
                     "@home" = { mountpoint = "/home"; };
                     "@nix" = { mountpoint = "/nix"; };
                     "@persist" = { mountpoint = "/persist"; ${enableImpermanence ? "neededForBoot = true;" : ""} };
+                     ${enableSopsSecrets ? ''"@secrets" = { mountpoint = "/persist/secrets"; neededForBoot = true; };'' : ""}
+
                   };
                 };
               };

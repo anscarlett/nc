@@ -6,11 +6,11 @@ in {
   # Use btrfs-flex disko preset for home/legion
   disko = (btrfsPreset {
     device = "/dev/disk/by-id/legion-disk";
-    enableImpermanence = false;
-    enableHibernate = false;
+    enableImpermanence = true;
+    enableHibernate = true;
     swapSize = null;
-    luksName = "cryptlegion";
-    enableYubikey = false;
+    luksName = "cryptroot";
+    enableYubikey = true;
   }).disko;
 
   system = "x86_64-linux";
@@ -19,4 +19,11 @@ in {
     ../../../common.nix
     nixos-hardware.nixosModules.lenovo-legion
   ];
+    sops.secrets.mysecret = {
+    sopsFile = ./secrets.yaml;
+    path = "/persist/secrets/mysecret"; # Store secret in the secrets subvolume
+    owner = "root";
+    group = "root";
+    mode = "0400";
+  };
 }

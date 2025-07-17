@@ -1,6 +1,8 @@
 # Import and merge all outputs
+{lib}:
 inputs: dir: let
-  inherit (builtins) mapAttrs recursiveUpdate;
+  inherit (builtins) mapAttrs;
+  inherit (lib) recursiveUpdate;
   
   # Import all output files
   outputs = import ./import-all.nix dir;
