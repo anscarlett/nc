@@ -1,11 +1,11 @@
-{ device ? "/dev/disk/by-id/your-disk", vgName ? "vg", rootSize ? "100%FREE", swapSize ? null, homeSize ? null }:
+{ disk ? "/dev/disk/by-id/your-disk", vgName ? "vg", rootSize ? "100%FREE", swapSize ? null, homeSize ? null }:
 
 {
   disko.devices = {
     disk = {
       main = {
         type = "disk";
-        device = device;
+        device = disk;
         content = {
           type = "gpt";
           partitions = {
