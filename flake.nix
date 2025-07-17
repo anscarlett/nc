@@ -14,7 +14,7 @@
       flake = false;
     };
     sopsnix = {
-      url = "https://github.com/Mic92/sops-nix";
+      url = "github:Mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     flake-utils.url = "github:numtide/flake-utils";
