@@ -1,3 +1,3 @@
 {
-  nixVersion = "nixos-unstable";
+  nixVersion = "25.05";
 }

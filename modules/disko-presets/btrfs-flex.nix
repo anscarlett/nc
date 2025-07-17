@@ -31,17 +31,34 @@
               content = {
                 type = "luks";
                 name = luksName;
-                ${enableYubikey ? "# Add Yubikey unlock options here (see disko/luks2 + tang/yubikey integration)" : ""}
+                # TODO: Add Yubikey unlock options if enableYubikey is true
                 content = {
                   type = "btrfs";
                   subvolumes = {
-                    "@" = { mountpoint = "/"; ${enableImpermanence ? "options = [\"subvol=@\" \"noatime\" \"compress=zstd\" \"discard=async\"];" : ""} };
-                    "@home" = { mountpoint = "/home"; };
-                    "@nix" = { mountpoint = "/nix"; };
-                    "@persist" = { mountpoint = "/persist"; ${enableImpermanence ? "neededForBoot = true;" : ""} };
-                     ${enableSopsSecrets ? ''"@secrets" = { mountpoint = "/persist/secrets"; neededForBoot = true; };'' : ""}
-
-                  };
+                    "@" = { 
+                      mountpoint = "/";
+                      mountOptions = if enableImpermanence then 
+                        ["subvol=@" "noatime" "compress=zstd" "discard=async"]
+                      else ["subvol=@"];
+                    };
+                    "@home" = { 
+                      mountpoint = "/home";
+                      mountOptions = ["subvol=@home"];
+                    };
+                    "@nix" = { 
+                      mountpoint = "/nix";
+                      mountOptions = ["subvol=@nix"];
+                    };
+                    "@persist" = { 
+                      mountpoint = "/persist";
+                      mountOptions = ["subvol=@persist"];
+                    };
+                  } // (if enableSopsSecrets then {
+                    "@secrets" = { 
+                      mountpoint = "/persist/secrets"; 
+                      mountOptions = ["subvol=@secrets"];
+                    };
+                  } else {});
                 };
               };
             };
@@ -49,6 +66,17 @@
         };
       };
     };
-    ${enableHibernate && swapSize != null ? 'lvm_vg = { swap_vg = { type = "lvm_vg"; lvs = { swap = { size = "' + swapSize + '"; content.type = "swap"; }; }; }; };' : ""}
-  };
+  } // (if enableHibernate && swapSize != null then {
+    lvm_vg = { 
+      swap_vg = { 
+        type = "lvm_vg"; 
+        lvs = { 
+          swap = { 
+            size = swapSize; 
+            content.type = "swap"; 
+          }; 
+        }; 
+      }; 
+    };
+  } else {});
 }
