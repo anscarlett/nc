@@ -73,15 +73,34 @@ All `.nix` files in the `inputs/` directory are automatically imported. You don'
 
 ### Building System Configurations
 ```bash
-sudo nixos-rebuild switch --flake .#ct-laptop    # Build CT laptop
-sudo nixos-rebuild switch --flake .#home-legion  # Build home Legion
+# Build and switch to a system configuration (combines NixOS + Home Manager)
+sudo nixos-rebuild switch --flake .#laptop-ct     # Build CT laptop
+sudo nixos-rebuild switch --flake .#legion-home   # Build home Legion
+sudo nixos-rebuild switch --flake .#rock5b-home   # Build Rock5B server
+sudo nixos-rebuild switch --flake .#test-vm       # Build test VM
 ```
 
-### Building Home Configurations
+### Building Home Configurations (standalone)
 ```bash
+# If you want to use Home Manager standalone (not integrated with NixOS)
 home-manager switch --flake .#adrian.scarlett-ct  # Build CT work profile
 home-manager switch --flake .#adrian-home         # Build home profile
 ```
+
+### Setting up a new system
+
+1. **Generate a password hash:**
+   ```bash
+   ./scripts/generate-password.sh yourpassword
+   ```
+
+2. **Update the host configuration with the password hash:**
+   Replace the placeholder `$6$rounds=4096$...` in your host config with the generated hash.
+
+3. **Build the system:**
+   ```bash
+   sudo nixos-rebuild switch --flake .#hostname
+   ```
 
 ## Design Philosophy
 

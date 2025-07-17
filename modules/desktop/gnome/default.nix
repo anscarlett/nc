@@ -11,9 +11,9 @@
 
   # GNOME-specific packages
   environment.systemPackages = with pkgs; [
-    gnome.gnome-tweaks
-    gnome.dconf-editor
-    gnome.gnome-shell-extensions
+    gnome-tweaks
+    dconf-editor
+    gnomeExtensions.dash-to-dock
   ];
 
   # Enable common GNOME services

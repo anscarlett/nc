@@ -1,16 +1,69 @@
 # Nix build outputs
-result/
 result
+result-*
+.gcroots
 
-# Editor files
+# VM and disk images
+*.qcow2
+*.img
+*.iso
+*.vmdk
+*.vdi
+vm-data/
+nix-store-*-vm-test.qcow2
+
+# NixOS generation files
+*.img
+
+# Editor and IDE files
 *.swp
+*.swo
 *~
+.vscode/
+.idea/
+*.sublime-*
+.nvimrc
+.vim/
 
 # Local environment
 .direnv/
 .envrc
+.env
+.env.local
 
-# VM files
-vm-data/
-*.qcow2
-*.iso
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.temp
+*.log
+*.backup
+*.bak
+
+# Cache directories
+.cache/
+__pycache__/
+*.pyc
+*.pyo
+
+# Secret files (just in case)
+secrets.yaml.bak
+*.key
+*.pem
+*.p12
+*.pfx
+
+# Testing artifacts
+test-results/
+coverage/
+
+# Local development
+local.nix
+dev.nix

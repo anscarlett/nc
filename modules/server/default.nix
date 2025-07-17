@@ -3,8 +3,11 @@
   # Disable unnecessary desktop services
   services.xserver.enable = false;
   services.printing.enable = false;
-  sound.enable = false;
-  hardware.pulseaudio.enable = false;
+  
+  # Disable audio services for servers
+  services.pipewire.enable = false;
+  services.pulseaudio.enable = false;
+  security.rtkit.enable = false;
 
   # Server packages
   environment.systemPackages = with pkgs; [
