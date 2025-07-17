@@ -27,12 +27,9 @@
   # User management
   users.mutableUsers = false;  # Manage users through Nix only
   
-  # Define default user - can be overridden in host configs
-  users.users.adrian = {
-    isNormalUser = true;
-    extraGroups = [ "wheel" "networkmanager" "audio" "video" ];
-    shell = pkgs.zsh;
-  };
+  # Users are now automatically created from home manager configurations
+  # See lib/auto-users.nix for the implementation
+  # Individual hosts can override user settings and set passwords
   
   # Enable zsh system-wide
   programs.zsh = {
@@ -71,6 +68,30 @@
     settings = {
       PermitRootLogin = "no";
       PasswordAuthentication = false;
+    };
+  };
+
+  # YubiKey support for LUKS and authentication
+  services.udev.packages = [ pkgs.yubikey-personalization ];
+  programs.gnupg.agent = {
+    enable = true;
+    enableSSHSupport = true;
+  };
+  
+  # LUKS YubiKey support
+  boot.initrd.availableKernelModules = [ "uas" "usbhid" "usb_storage" ];
+  
+  # Add cryptsetup with YubiKey support to initrd
+  boot.initrd.systemd.enable = true;
+  boot.initrd.systemd.services.yubikey-luks = {
+    description = "YubiKey LUKS unlock";
+    wantedBy = [ "cryptsetup.target" ];
+    before = [ "cryptsetup.target" ];
+    unitConfig.DefaultDependencies = false;
+    serviceConfig = {
+      Type = "oneshot";
+      RemainAfterExit = true;
+      ExecStart = "${pkgs.coreutils}/bin/sleep 2"; # Wait for YubiKey to be detected
     };
   };
 

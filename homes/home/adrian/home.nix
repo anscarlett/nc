@@ -1,8 +1,11 @@
 # Personal home configuration for Adrian
-inputs: { pkgs, ... }: {
+inputs: { pkgs, lib, ... }: let
+  nameFromPath = import ../../../lib/get-name-from-path.nix { inherit lib; };
+  username = nameFromPath.getUsername ./.;  # This gives us "adrian-home"
+in {
   home = {
-    username = "adrian";
-    homeDirectory = "/home/adrian";
+    username = username;
+    homeDirectory = "/home/${username}";
     stateVersion = (import ../../../lib/constants.nix).nixVersion;
   };
 

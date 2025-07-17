@@ -13,17 +13,15 @@ in {
   virtualisation.vmware.guest.enable = lib.mkDefault false;
   virtualisation.virtualbox.guest.enable = lib.mkDefault false;
   
-  # Simple disk configuration for VM testing
-  fileSystems."/" = {
-    device = "/dev/disk/by-label/nixos";
-    fsType = "ext4";
-  };
+  # VM configuration 
+  virtualisation.memorySize = 4096;
+  virtualisation.cores = 2;
+  virtualisation.graphics = true;
   
-  fileSystems."/boot" = {
-    device = "/dev/disk/by-label/boot";
-    fsType = "vfat";
-  };
-  
+  # Force VM to use disko disk layout
+  virtualisation.useBootLoader = true;
+  virtualisation.useEFIBoot = true;
+   
   # Boot configuration for VM
   boot.loader.grub.enable = false;
   boot.loader.systemd-boot.enable = true;
@@ -39,16 +37,19 @@ in {
     ../../../modules/desktop/hyprland
   ];
   
-  # Home Manager configuration for the VM user
-  home-manager.users.adrian = import ../../../homes/home/adrian/home.nix inputs;
-  
-  # VM test user
-  users.users.adrian = {
-    hashedPassword = "$6$hUZs3UqzsRWgkcP/$6iooTMSWqeFwn12p9zucgvNGuKIqPSFXX5dgKrxpnp7JfyFogP/hup8/0x3ihIIaXZS.t68/L8McEk23WXJLj/";
-    isNormalUser = true;
-    extraGroups = [ "wheel" "networkmanager" ];
+  # Users - manually created for now (can be automated later)
+  users.users = {
+    adrian = {
+      isNormalUser = true;
+      extraGroups = [ "wheel" "networkmanager" "audio" "video" ];
+      shell = pkgs.zsh;
+      password = "adrian";  # Simple password for VM testing
+    };
+    
+    # Enable root login for testing
+    root.password = "nixos";
   };
   
-  # Enable root login for testing
-  users.users.root.password = "nixos";
+  # Home Manager - specify which config to use
+  home-manager.users.adrian = import ../../../homes/home/adrian/home.nix inputs;
 }

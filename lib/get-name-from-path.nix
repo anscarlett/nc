@@ -12,16 +12,24 @@ let
     # Convert path to string and split into components
     pathStr = toString path;
     components = lib.splitString "/" pathStr;
-    # Remove root directory, file name, and any nix store paths
-    filtered = builtins.filter (x: 
-      x != "" && 
-      x != rootDir && 
-      x != fileToRemove && 
-      !(lib.hasPrefix "nix-store-" x) &&
-      !(lib.hasPrefix "/nix/store" x)
-    ) components;
+    
+    # Find the index of the root directory in the path
+    rootIndex = lib.lists.findFirstIndex (x: x == rootDir) null components;
+    
+    # If we found the root directory, take the components after it
+    relevantComponents = if rootIndex != null && rootIndex + 1 < builtins.length components
+      then builtins.genList (i: builtins.elemAt components (rootIndex + 1 + i)) 
+                           (builtins.length components - rootIndex - 1)
+      else [];
+    
+    # Remove the filename if present
+    withoutFile = if relevantComponents != [] && lib.last relevantComponents == fileToRemove
+      then lib.init relevantComponents
+      else relevantComponents;
+    
     # Order components as needed
-    ordered = if reverse then lib.lists.reverseList filtered else filtered;
+    ordered = if reverse then lib.lists.reverseList withoutFile else withoutFile;
+    
     # Join with hyphens
     name = builtins.concatStringsSep "-" ordered;
   in name;

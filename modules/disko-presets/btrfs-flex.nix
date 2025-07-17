@@ -31,7 +31,18 @@
               content = {
                 type = "luks";
                 name = luksName;
-                # TODO: Add Yubikey unlock options if enableYubikey is true
+                settings = {
+                  allowDiscards = true;
+                  bypassWorkqueues = true;
+                } // (if enableYubikey then {
+                  # YubiKey LUKS configuration
+                  # This requires the YubiKey to be set up with a LUKS key slot
+                  # Use: cryptsetup luksAddKey /dev/disk/by-id/your-disk --key-slot 1
+                  keyFile = "/dev/disk/by-id/usb-Yubico_YubiKey_*";
+                  keyFileSize = 32;
+                  keyFileOffset = 0;
+                  fallbackToPassword = true;
+                } else {});
                 content = {
                   type = "btrfs";
                   subvolumes = {
