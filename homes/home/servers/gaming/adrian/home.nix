@@ -16,14 +16,3 @@ inputs: { pkgs, ... }: {
     userEmail = "gaming@email.com";
   };
 }
-
-  # Let home-manager manage itself
-  programs.home-manager.enable = true;
-
-  # Gaming server specific configurations
-  programs.git = {
-    enable = true;
-    userName = "Adrian";
-    userEmail = "gaming@email.com";
-  };
-}

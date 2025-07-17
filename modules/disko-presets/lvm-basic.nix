@@ -21,7 +21,7 @@
             lvm = {
               size = "100%";
               content = {
-                type = "lvm";
+                type = "lvm_pv";
                 vg = vgName;
               };
             };
@@ -41,9 +41,21 @@
               mountpoint = "/";
             };
           };
-          ${swapSize != null ? '' + 'swap = { size = "' + swapSize + '"; content.type = "swap"; };' : ""}
-          ${homeSize != null ? '' + 'home = { size = "' + homeSize + '"; content = { type = "filesystem"; format = "ext4"; mountpoint = "/home"; }; };' : ""}
-        };
+        } // (if swapSize != null then {
+          swap = {
+            size = swapSize;
+            content.type = "swap";
+          };
+        } else {}) // (if homeSize != null then {
+          home = {
+            size = homeSize;
+            content = {
+              type = "filesystem";
+              format = "ext4";
+              mountpoint = "/home";
+            };
+          };
+        } else {});
       };
     };
   };
