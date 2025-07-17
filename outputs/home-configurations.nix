@@ -9,6 +9,5 @@ let
     ];
   };
 in
-{
   builtins.mapAttrs mkHome homes
-}
+

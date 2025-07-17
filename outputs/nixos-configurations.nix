@@ -17,6 +17,4 @@ let
     };
   };
 in
-{
   builtins.mapAttrs mkHost allHosts
-}
