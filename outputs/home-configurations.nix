@@ -1,4 +1,4 @@
-inputs: {
+{
   homeConfigurations = let
     # Get all homes from the directory structure
     homes = (import ../lib/mk-homes.nix { lib = inputs.nixpkgs.lib; }) ../homes;
