@@ -10,5 +10,5 @@ let
   };
 in
 {
-  homeConfigurations = builtins.mapAttrs mkHome homes;
+  builtins.mapAttrs mkHome homes
 }
