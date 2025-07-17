@@ -11,7 +11,7 @@ inputs: {
       installer = {
         system = "x86_64-linux";
         modules = [
-          ../hosts/installer/default.nix
+          ../hosts/installer/host.nix
         ];
       };
     };
