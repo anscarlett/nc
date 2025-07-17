@@ -43,5 +43,8 @@
     };
   };
 
-  outputs = inputs: (import ./lib/import-outputs.nix { lib = inputs.nixpkgs.lib; }) inputs ./outputs;
+  outputs = inputs: {
+    homeConfigurations = (import ./outputs/home-configurations.nix) inputs;
+    nixosConfigurations = (import ./outputs/nixos-configurations.nix) inputs;
+  };
 }
