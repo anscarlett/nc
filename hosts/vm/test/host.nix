@@ -35,10 +35,10 @@ in {
     ../../../modules/desktop/hyprland
   ];
   
-  # Users are automatically created by core module from homes directory
-  # Override specific settings for VM testing
-  users.users."adrian-home".password = lib.mkForce "adrian";
-  users.users.root.password = lib.mkForce "nixos";
+    # Users are automatically created by core module from homes directory
+  # Override specific user settings
+  users.users.adrian-home.hashedPassword = lib.mkForce "$6$hUZs3UqzsRWgkcP/$6iooTMSWqeFwn12p9zucgvNGuKIqPSFXX5dgKrxpnp7JfyFogP/hup8/0x3ihIIaXZS.t68/L8McEk23WXJLj/";
+  users.users.adrianscarlett-work.hashedPassword = lib.mkForce "$6$hUZs3UqzsRWgkcP/$6iooTMSWqeFwn12p9zucgvNGuKIqPSFXX5dgKrxpnp7JfyFogP/hup8/0x3ihIIaXZS.t68/L8McEk23WXJLj/";
   
   # Example: System-level secrets for testing (uncomment when needed)
   # age.secrets.test-data = {

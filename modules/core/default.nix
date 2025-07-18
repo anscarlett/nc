@@ -121,5 +121,5 @@ in {
   };
 
   # State version
-  system.stateVersion = (import ../../lib/constants.nix).nixVersion;
+  system.stateVersion = "25.05";
 }

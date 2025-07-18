@@ -27,7 +27,10 @@ let
     installer = {
       system = "x86_64-linux";
       modules = [
-        (import ../hosts/installer/host.nix)
+                ./modules/core
+        ./modules/desktop
+        ./modules/server
+        (import ./hosts/installer/host.nix)
       ];
     };
   };
