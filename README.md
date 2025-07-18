@@ -1,6 +1,14 @@
 # NixOS Configuration
 
-A minimal, modular NixOS system configuration using flakes.
+A minimal, modular NixOS system configuration using flakes with comprehensive YubiKey security integration.
+
+📚 **For detailed documentation, see [DOCUMENTATION.md](DOCUMENTATION.md)**
+
+## Quick Start
+
+1. **System setup**: Follow this README for basic NixOS configuration
+2. **YubiKey security**: See [docs/yubikey-overview.md](docs/yubikey-overview.md) for hardware security features
+3. **Customization**: See [docs/CUSTOMISATION.md](docs/CUSTOMISATION.md) for configuration details
 
 ## Structure
 
