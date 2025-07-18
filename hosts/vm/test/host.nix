@@ -9,23 +9,21 @@ in {
   # VM-specific settings
   networking.hostName = hostname;
   
-  # Enable VM guest additions
-  virtualisation.vmware.guest.enable = lib.mkDefault false;
-  virtualisation.virtualbox.guest.enable = lib.mkDefault false;
-  
-  # VM configuration 
-  virtualisation.memorySize = 4096;
-  virtualisation.cores = 2;
-  virtualisation.graphics = true;
-  
-  # Force VM to use disko disk layout
-  virtualisation.useBootLoader = true;
-  virtualisation.useEFIBoot = true;
-   
-  # Boot configuration for VM
+  # Boot configuration 
   boot.loader.grub.enable = false;
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
+  
+  # VM filesystem configuration
+  fileSystems."/" = {
+    device = "/dev/disk/by-label/nixos";
+    fsType = "ext4";
+  };
+  
+  fileSystems."/boot" = {
+    device = "/dev/disk/by-label/boot";
+    fsType = "vfat";
+  };
   
   # Enable SSH for remote access
   services.openssh.enable = true;
@@ -39,14 +37,13 @@ in {
   
   # Users are automatically created by core module from homes directory
   # Override specific settings for VM testing
-  users.users = lib.mkMerge [
-    # Auto-created users from core module
-    config.users.users
-    # VM-specific overrides
-    {
-      # Simple passwords for VM testing
-      adrian.password = lib.mkForce "adrian";
-      root.password = lib.mkForce "nixos";
-    }
-  ];
+  users.users."adrian-home".password = lib.mkForce "adrian";
+  users.users.root.password = lib.mkForce "nixos";
+  
+  # Example: System-level secrets for testing (uncomment when needed)
+  # age.secrets.test-data = {
+  #   file = ./test-data.age;
+  #   owner = "adrian";
+  # };
+  # Secrets definitions are in ./secrets.nix
 }

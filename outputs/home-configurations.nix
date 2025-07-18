@@ -22,6 +22,7 @@ let
     inputs.home-manager.lib.homeManagerConfiguration {
       pkgs = inputs.nixpkgs.legacyPackages.${system};
       modules = [
+        # Only include the actual home config
         (homeConfig inputs)
       ];
     };

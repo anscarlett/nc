@@ -7,7 +7,7 @@ let
   # Extract username from home path (reverse of pathToUsername in mk-configs.nix)
   # Examples:
   # "adrian-home" -> "adrian"  (from homes/home/adrian)
-  # "adrianscarlett-ct" -> "adrianscarlett" (from homes/ct/adrianscarlett)
+  # "adrianscarlett-work" -> "adrianscarlett" (from homes/work/adrianscarlett)
   getUsernameFromHomeName = homeName:
     let
       parts = lib.splitString "-" homeName;
@@ -19,7 +19,7 @@ let
   # Extract context from home path
   # Examples:
   # "adrian-home" -> "home"
-  # "adrianscarlett-ct" -> "ct"
+  # "adrianscarlett-work" -> "work"
   getContextFromHomeName = homeName:
     let
       parts = lib.splitString "-" homeName;
@@ -33,7 +33,7 @@ let
     homesDir ? ../homes,
     defaultGroups ? [ "wheel" "networkmanager" "audio" "video" ],
     defaultShell ? pkgs.zsh,
-    userPasswords ? {},  # Attribute set of username -> hashedPassword
+    userPasswords ? {},  # Attribute set of full-username -> hashedPassword
     extraUserConfig ? {}  # Additional per-user config
   }:
     let
@@ -42,10 +42,12 @@ let
       
       createUser = homeName:
         let
-          username = getUsernameFromHomeName homeName;
+          # Use the full context-aware name as the username
+          username = homeName;  # e.g., "adrian-home", "adrianscarlett-work"
+          baseUsername = getUsernameFromHomeName homeName;  # e.g., "adrian", "adrianscarlett"
           context = getContextFromHomeName homeName;
-          userConfig = extraUserConfig.${username} or {};
-          hashedPassword = userPasswords.${username} or null;
+          userConfig = extraUserConfig.${username} or extraUserConfig.${baseUsername} or {};
+          hashedPassword = userPasswords.${username} or userPasswords.${baseUsername} or null;
         in {
           name = username;
           value = {
@@ -53,15 +55,13 @@ let
             extraGroups = userConfig.extraGroups or defaultGroups;
             shell = userConfig.shell or defaultShell;
             hashedPassword = hashedPassword;
-            description = userConfig.description or "User ${username} (${context})";
+            description = userConfig.description or "User ${baseUsername} (${context})";
           } // (builtins.removeAttrs userConfig [ "extraGroups" "shell" "description" ]);
         };
       
       users = map createUser homeNames;
-      # Remove duplicates by username (in case multiple contexts have the same user)
-      uniqueUsers = lib.unique users;
     in
-      builtins.listToAttrs uniqueUsers;
+      builtins.listToAttrs users;
 
   # Helper to create home-manager user assignments from discovered homes
   autoCreateHomeManagerUsers = {
@@ -72,12 +72,8 @@ let
       homes = mkConfigs.mkHomes homesDir;
       
       createHomeAssignment = homeName: homeConfig:
-        let
-          username = getUsernameFromHomeName homeName;
-        in {
-          name = username;
-          value = homeConfig inputs;
-        };
+        # Return the home configuration directly - mapAttrs handles the naming
+        homeConfig inputs;
     in
       builtins.mapAttrs createHomeAssignment homes;
 

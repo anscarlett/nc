@@ -4,6 +4,7 @@ let
   hosts = mkConfigs.mkHosts ../hosts;
   mkHost = name: hostConfig: inputs.nixpkgs.lib.nixosSystem {
     inherit (hostConfig) system;
+    specialArgs = { inherit inputs; };
     modules = (map (module: 
       if builtins.isFunction module 
       then module inputs
