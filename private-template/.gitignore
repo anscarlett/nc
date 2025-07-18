@@ -1,0 +1,47 @@
+# Gitignore for private NixOS configuration
+
+# Nix build results
+result
+result-*
+
+# Nix store paths
+/nix/store/
+
+# Age keys (NEVER commit these!)
+*.txt
+keys.txt
+.config/age/keys.txt
+
+# Decrypted secrets (these should always be encrypted .age files)
+secrets/*.key
+secrets/*.pem
+secrets/*.crt
+secrets/*.conf
+secrets/decrypted-*
+
+# Temporary files
+.tmp/
+*.tmp
+*.log
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# VM disk images (if testing locally)
+*.qcow2
+*.img
+
+# Backup files
+*.bak
+*.backup
+
+# Flake lock (uncomment if you want to pin versions)
+# flake.lock

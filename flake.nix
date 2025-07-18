@@ -46,5 +46,23 @@
   outputs = inputs: {
     homeConfigurations = (import ./outputs/home-configurations.nix) inputs;
     nixosConfigurations = (import ./outputs/nixos-configurations.nix) inputs;
+    
+    # Export lib and modules for use by private configs
+    lib = import ./lib { lib = inputs.nixpkgs.lib; };
+    modules = {
+      core = ./modules/core;
+      desktop = {
+        dwm = ./modules/desktop/dwm;
+        gnome = ./modules/desktop/gnome;
+        hyprland = ./modules/desktop/hyprland;
+        kde = ./modules/desktop/kde;
+      };
+      disko-presets = {
+        btrfs-flex = ./modules/disko-presets/btrfs-flex.nix;
+        lvm-basic = ./modules/disko-presets/lvm-basic.nix;
+      };
+      installer = ./modules/installer;
+      server = ./modules/server;
+    };
   };
 }
