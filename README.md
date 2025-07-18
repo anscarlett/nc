@@ -2,150 +2,134 @@
 
 A minimal, modular NixOS system configuration using flakes with comprehensive YubiKey security integration.
 
-📚 **For detailed documentation, see [DOCUMENTATION.md](DOCUMENTATION.md)**
-
-## Quick Start
+## ⚡ Quick Start
 
 1. **System setup**: Follow this README for basic NixOS configuration
 2. **YubiKey security**: See [docs/yubikey-overview.md](docs/yubikey-overview.md) for hardware security features
-3. **Customization**: See [docs/CUSTOMISATION.md](docs/CUSTOMISATION.md) for configuration details
+3. **Customization**: See [docs/customisation.md](docs/customisation.md) for configuration details
 
-## Structure
+## 📚 Documentation
 
-The configuration is organized into separate directories for better maintainability:
+### 🔑 YubiKey Security Setup
+- **[YubiKey Overview](docs/yubikey-overview.md)** - Main guide with navigation paths
+- **[Quick Setup](docs/yubikey-quick-setup.md)** - Essential YubiKey setup in 30 minutes
+- **[Pre-deployment Checklist](docs/yubikey-checklist.md)** - What to prepare vs. on-site setup
+- **[Complete Reference](docs/yubikey-general.md)** - Comprehensive YubiKey guide (all features)
+- **[LUKS Installation Guide](docs/yubikey-luks.md)** - YubiKey LUKS setup for NixOS installer
+
+### 🛠️ System Configuration
+- **[Customization Guide](docs/customisation.md)** - How to customize this configuration
+- **[VM Testing](docs/vm-testing.md)** - Testing configurations in virtual machines
+
+## 📁 Repository Structure
 
 ```
-.
-├── hosts/              # NixOS system configurations
-│   ├── ct/
-│   │   └── laptop/
-│   │       └── host.nix  # Hostname: ct-laptop
-│   └── home/
-│       └── legion/
-│           └── host.nix  # Hostname: home-legion
-│
-├── homes/              # Home-manager user configurations
-│   ├── ct/
-│   │   └── adrian.scarlett/
-│   │       └── home.nix  # Username: adrian.scarlett-ct
-│   └── home/
-│       ├── adrian/
-│       │   └── home.nix  # Username: adrian-home
-│       └── servers/
-│           └── gaming/
-│               └── adrian/
-│                   └── home.nix  # Username: adrian-gaming-servers-home
-│
-├── inputs/             # Flake inputs (automatically imported)
-│   ├── nixpkgs.nix     # nixpkgs source
-│   ├── home-manager.nix # home-manager
-│   ├── agenix.nix      # secrets management
-│   └── nixos-hardware.nix  # hardware configurations
-│
-├── lib/                # Helper functions
-│   ├── constants.nix    # Shared constants (e.g., NixOS version)
-│   ├── import-all.nix   # Auto-import inputs
-│   ├── import-outputs.nix # Auto-import outputs
-│   ├── mk-hosts.nix     # Generate host configurations
-│   ├── mk-homes.nix     # Generate home configurations
-│   └── get-username.nix # Generate usernames from paths
-│
-├── outputs/            # Flake outputs
-│   ├── nixos-configurations.nix  # System configurations
-│   └── home-configurations.nix   # User configurations
-│
-└── flake.nix          # Minimal flake that imports all components
+├── docs/              # 📚 All documentation
+├── hosts/             # 🖥️ NixOS system configurations
+│   ├── ct/laptop/     #     → ct-laptop
+│   └── home/legion/   #     → home-legion
+├── homes/             # 🏠 Home Manager user configurations  
+│   ├── ct/adrianscarlett/    #     → adrianscarlett-ct
+│   └── home/adrian/   #     → adrian-home
+├── modules/           # 🧩 Reusable NixOS modules
+│   ├── core/          #     Essential system components
+│   ├── desktop/       #     Desktop environments (GNOME, Hyprland, etc.)
+│   └── disko-presets/ #     Disk partitioning templates
+├── lib/               # 🔧 Helper functions
+├── outputs/           # 📤 Flake outputs (auto-generated)
+├── scripts/           # 🛠️ Utility scripts
+└── flake.nix         # ❄️ Main flake configuration
 ```
 
-## Structure
+## 🔧 Key Features
 
-### Hosts
-System configurations are organized in the `hosts/` directory. The hostname is generated from the path:
+- **🧩 Modular design** - Easy to customize and extend
+- **🔍 Auto-discovery** - Automatically finds hosts and users from folder structure
+- **🔐 YubiKey integration** - Hardware security for LUKS, SSH, 2FA, GPG
+- **💾 Disko support** - Declarative disk partitioning with encryption
+- **🏠 Home Manager** - User environment management integrated with NixOS
+- **🖥️ Multiple desktops** - GNOME, Hyprland, KDE, DWM support
+- **📱 VM testing** - Easy configuration testing in virtual machines
+
+## 🛡️ Security Features
+
+- **YubiKey LUKS unlock** - Disk encryption without passwords
+- **Hardware SSH keys** - SSH authentication via YubiKey
+- **2FA integration** - YubiKey as authenticator app
+- **GPG on hardware** - Signing and encryption keys on YubiKey
+- **PAM integration** - System login via YubiKey
+
+## 🏗️ How It Works
+
+### 🖥️ Hosts (System Configurations)
 ```
 hosts/ct/laptop/host.nix     → ct-laptop
-hosts/home/legion/host.nix    → home-legion
+hosts/home/legion/host.nix   → home-legion
 ```
 
-### Homes
-User configurations are organized in the `homes/` directory. The username is generated from the path in reverse order:
+### 🏠 Homes (User Configurations) 
 ```
-homes/ct/adrian.scarlett/home.nix          → adrian.scarlett-ct
-homes/home/adrian/home.nix                 → adrian-home
-homes/home/servers/gaming/adrian/home.nix  → adrian-gaming-servers-home
+homes/ct/adrianscarlett/home.nix    → adrianscarlett-ct
+homes/home/adrian/home.nix          → adrian-home
 ```
 
-### Automatic Imports
-All `.nix` files in the `inputs/` directory are automatically imported. You don't need to manually add new inputs to `flake.nix`.
+### 🔄 Auto-Discovery
+The configuration automatically discovers and builds all hosts and users from the folder structure - no manual registration needed!
 
-## Usage
+## 🚀 Usage
 
-### Building System Configurations
+### Building Complete Systems (NixOS + Home Manager)
 ```bash
 # Build and switch to a system configuration (combines NixOS + Home Manager)
-sudo nixos-rebuild switch --flake .#laptop-ct     # Build CT laptop
-sudo nixos-rebuild switch --flake .#legion-home   # Build home Legion
-sudo nixos-rebuild switch --flake .#rock5b-home   # Build Rock5B server
-sudo nixos-rebuild switch --flake .#test-vm       # Build test VM
+sudo nixos-rebuild switch --flake .#ct-laptop     # Build CT laptop
+sudo nixos-rebuild switch --flake .#home-legion   # Build home Legion
+sudo nixos-rebuild switch --flake .#home-rock5b   # Build Rock5B server
+sudo nixos-rebuild switch --flake .#vm-test       # Build test VM
 ```
 
-### Building Home Configurations (standalone)
+### Building Home Manager Only (Standalone)
 ```bash
 # If you want to use Home Manager standalone (not integrated with NixOS)
-home-manager switch --flake .#adrian.scarlett-ct  # Build CT work profile
+home-manager switch --flake .#adrianscarlett-ct   # Build CT work profile
 home-manager switch --flake .#adrian-home         # Build home profile
 ```
 
-### Setting up a new system
+## 🛠️ Setup Guide
 
-1. **Generate a password hash:**
-   ```bash
-   ./scripts/generate-password.sh yourpassword
-   ```
+### 1. 🔐 Generate Password Hash
+```bash
+./scripts/generate-password.sh yourpassword
+```
 
-2. **Update the host configuration with the password hash:**
-   Replace the placeholder `$6$rounds=4096$...` in your host config with the generated hash.
+### 2. ⚙️ Configure Host
+Update your host configuration with the generated password hash (replace placeholder `$6$rounds=4096$...`).
 
-3. **Build the system:**
-   ```bash
-   sudo nixos-rebuild switch --flake .#hostname
-   ```
-
-## Design Philosophy
-
-- Each file has a single responsibility
-- Inputs and outputs are separated into their own files
-- The main `flake.nix` is kept minimal and only combines the modular pieces
-- Easy to maintain and extend without cluttering the main configuration
-
-## Usage
-
-To rebuild your system with this configuration:
-
+### 3. 🏗️ Build System
 ```bash
 sudo nixos-rebuild switch --flake .#hostname
 ```
 
-Replace `hostname` with your system's hostname as defined in the configuration.
+## 🎯 Design Philosophy
 
-## Setup
+- **Single responsibility** - Each file has one clear purpose
+- **Modular architecture** - Easy to maintain and extend
+- **Minimal main config** - `flake.nix` just combines modular pieces
+- **Auto-discovery** - No manual registration of hosts/users needed
 
-1. Generate an SSH key if you haven't already:
-   ```bash
-   ssh-keygen -t ed25519 -C "your_email@example.com"
-   ```
+## 📖 Getting Started
 
-2. Add your SSH key to your Git provider (e.g., GitHub, GitLab)
+### For New Users
+1. **🔍 Read the docs**: Start with [YubiKey Overview](docs/yubikey-overview.md) for security setup
+2. **⚡ Quick setup**: Use [Quick Setup Guide](docs/yubikey-quick-setup.md) for 30-minute YubiKey config
+3. **🎨 Customize**: See [Customization Guide](docs/customisation.md) for configuration options
+4. **🧪 Test safely**: Use [VM Testing](docs/vm-testing.md) before deploying to real hardware
 
-3. Initialize the git repository and push:
-   ```bash
-   git init
-   git add .
-   git commit -m "Initial NixOS configuration"
-   git remote add origin git@github.com:username/nixos-config.git
-   git push -u origin main
-   ```
+### Complete Setup Process
+1. Clone this repository
+2. Review [Customization Guide](docs/customisation.md) for your needs
+3. Configure your hosts in `hosts/` directory
+4. Configure your users in `homes/` directory  
+5. Follow [YubiKey setup](docs/yubikey-overview.md) for hardware security
+6. Build and deploy with `nixos-rebuild switch --flake .#hostname`
 
-4. Build the configuration:
-   ```bash
-   sudo nixos-rebuild switch --flake .#hostname
-   ```
+For detailed setup instructions, see the documentation in the `docs/` folder.
