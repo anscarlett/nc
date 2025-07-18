@@ -18,7 +18,7 @@ inputs: { config, pkgs, lib, ... }:
   
   # Include installer modules
   imports = [
-    ./modules/core
-    ./modules/installer
+    ../../modules/core
+    ../../modules/installer
   ];
 }

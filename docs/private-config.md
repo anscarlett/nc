@@ -13,7 +13,7 @@ This guide shows how to create a private repository that extends this public Nix
 my-private-nixos/
 ├── flake.nix              # Directly imports from public repo - no duplication!
 ├── hosts/ct/laptop/       # Your private hosts (auto-discovered)
-├── homes/ct/adrianscarlett/ # Your private users (auto-discovered)
+├── homes/work/adrianscarlett/ # Your private users (auto-discovered)
 └── secrets/               # Your work secrets
 ```
 
@@ -129,7 +129,7 @@ Create `hosts/ct/laptop/host.nix`:
 
 ### 5. Create Work Home Configuration
 
-Create `homes/ct/adrianscarlett/home.nix`:
+Create `homes/work/adrianscarlett/home.nix`:
 
 ```nix
 { config, lib, pkgs, ... }:
@@ -234,7 +234,7 @@ sops secrets/work.yaml
 sudo nixos-rebuild switch --flake .#ct-laptop
 
 # Usernames are auto-generated from folder structure:  
-# homes/ct/adrianscarlett/home.nix → adrianscarlett-ct
+# homes/work/adrianscarlett/home.nix → adrianscarlett-work
 home-manager switch --flake .#adrianscarlett-ct
 ```
 

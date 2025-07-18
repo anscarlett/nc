@@ -21,10 +21,8 @@ in {
   networking.hostName = hostname;
   
   imports = [
-    ../../../common.nix
     ../../../modules/core
-    ../../../modules/desktop
-    inputs.nixos-hardware.nixosModules.lenovo-thinkpad-p14s-intel-gen5
+    ../../../modules/desktop/hyprland
   ];
   
   # Users are automatically created by core module from homes directory

@@ -2,6 +2,11 @@
 result
 result-*
 .gcroots
+.pre-commit-config.yaml
+
+# Nix development
+shell.nix.bak
+flake.lock.bak
 
 # VM and disk images
 *.qcow2
