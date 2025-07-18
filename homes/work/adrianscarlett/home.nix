@@ -7,7 +7,7 @@ in {
     # Set username when running standalone, but NixOS will override this
     username = lib.mkDefault username;
     homeDirectory = "/home/${username}";
-    stateVersion = (import ../../../lib/constants.nix).nixVersion;
+    stateVersion = "25.05";
   };
 
   # Let home-manager manage itself
