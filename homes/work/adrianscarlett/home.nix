@@ -1,7 +1,7 @@
-# Personal home configuration for Adrian
+# Work home configuration for Adrian Scarlett
 inputs: { pkgs, lib, config, ... }: let
   nameFromPath = import ../../../lib/get-name-from-path.nix { inherit lib; };
-  username = nameFromPath.getUsername ./.;  # This gives us "adrian-home"
+  username = nameFromPath.getUsername ./.;  # This gives us "adrianscarlett-work"
 in {
   home = {
     # Set username when running standalone, but NixOS will override this
@@ -18,40 +18,29 @@ in {
   accounts.contact.basePath = "${config.home.homeDirectory}/.local/share/contacts";
   accounts.email.maildirBasePath = "${config.home.homeDirectory}/.local/share/mail";
 
-  # Personal configurations
+  # Work-specific configurations
   programs.git = {
     enable = true;
     userName = "Adrian Scarlett";
-    userEmail = "personal@email.com";
+    userEmail = "adrian.scarlett@work.com";
   };
-
-  # Zsh configuration
-  programs.zsh = {
-    enable = true;
-    dotDir = ".config/zsh";
-    
-    history = {
-      size = 10000;
-      path = "$HOME/.config/zsh/history";
-    };
-    
-    shellAliases = {
-      ll = "ls -l";
-      la = "ls -la";
-      l = "ls -CF";
-      ".." = "cd ..";
-      "..." = "cd ../..";
-      
-      # Git aliases
-      gs = "git status";
-      ga = "git add";
-      gc = "git commit";
-      gp = "git push";
-      gl = "git log --oneline";
-      gd = "git diff";
-    };
-  };
-
-  # Ensure the directory exists
-  xdg.configFile."hypr/.keep".text = "";
+  
+  # Example: Work SSH configuration (uncomment when you set up secrets)
+  # programs.ssh = {
+  #   enable = true;
+  #   matchBlocks = {
+  #     "work-server" = {
+  #       hostname = "internal.company.com";
+  #       user = "ascarlett";
+  #       identityFile = config.age.secrets.ssh-work-key.path;
+  #     };
+  #   };
+  # };
+  
+  # Example: User-level secrets (uncomment when you set up secrets)
+  # age.secrets.ssh-work-key = {
+  #   file = ./ssh-work-key.age;
+  #   path = "${config.home.homeDirectory}/.ssh/work_key";
+  # };
+  # Secrets definitions are in ./secrets.nix
 }

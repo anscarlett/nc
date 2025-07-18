@@ -28,10 +28,34 @@ A minimal, modular NixOS system configuration using flakes with comprehensive Yu
 ```
 ├── docs/              # 📚 All documentation
 ├── hosts/             # 🖥️ NixOS system configurations
-│   ├── ct/laptop/     #     → ct-laptop
+│   ├── work/laptop/   #     → work-laptop
+│   │   ├── host.nix   #     System configuration
+│   │   └── secrets.nix #     System-level secrets (agenix/sops)
+│   └── home/legion/   #     → home-legion
+│       ├── host.nix   #     System configuration
+│       └── secrets.yaml #   System-level secrets (sops)
+├── homes/             # 🏠 Home Manager user configurations
+│   ├── work/user/     #     → user-work
+│   │   ├── home.nix   #     User configuration
+│   │   └── secrets.nix #     User-level secrets (agenix)
+│   └── home/user/     #     → user-home
+│       ├── home.nix   #     User configuration
+│       └── secrets.nix #     User-level secrets (agenix)
+├── modules/           # 📦 Reusable NixOS modules
+├── lib/               # 🔧 Helper functions and utilities
+├── scripts/           # 🚀 Utility scripts
+└── private-template/  # 📋 Template for private configurations
+```
+
+### 🔐 Secrets Management
+
+Secrets are co-located with their configurations:
+- **System secrets**: `hosts/*/secrets.nix` - WiFi, VPN, SSL certs (managed by NixOS)
+- **User secrets**: `homes/*/secrets.nix` - SSH keys, API tokens (managed by Home Manager)
+- **Both agenix and sops-nix** are supported for encryption
 │   └── home/legion/   #     → home-legion
 ├── homes/             # 🏠 Home Manager user configurations  
-│   ├── ct/adrianscarlett/    #     → adrianscarlett-ct
+│   ├── ct/adrianscarlett/    #     → adrianscarlett-work
 │   └── home/adrian/   #     → adrian-home
 ├── modules/           # 🧩 Reusable NixOS modules
 │   ├── core/          #     Essential system components
@@ -65,13 +89,13 @@ A minimal, modular NixOS system configuration using flakes with comprehensive Yu
 
 ### 🖥️ Hosts (System Configurations)
 ```
-hosts/ct/laptop/host.nix     → ct-laptop
+hosts/work/laptop/host.nix     → work-laptop
 hosts/home/legion/host.nix   → home-legion
 ```
 
 ### 🏠 Homes (User Configurations) 
 ```
-homes/ct/adrianscarlett/home.nix    → adrianscarlett-ct
+homes/work/adrianscarlett/home.nix    → adrianscarlett-work
 homes/home/adrian/home.nix          → adrian-home
 ```
 
@@ -83,7 +107,7 @@ The configuration automatically discovers and builds all hosts and users from th
 ### Building Complete Systems (NixOS + Home Manager)
 ```bash
 # Build and switch to a system configuration (combines NixOS + Home Manager)
-sudo nixos-rebuild switch --flake .#ct-laptop     # Build CT laptop
+sudo nixos-rebuild switch --flake .#work-laptop     # Build work laptop
 sudo nixos-rebuild switch --flake .#home-legion   # Build home Legion
 sudo nixos-rebuild switch --flake .#home-rock5b   # Build Rock5B server
 sudo nixos-rebuild switch --flake .#vm-test       # Build test VM

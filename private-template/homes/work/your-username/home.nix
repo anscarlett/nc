@@ -38,10 +38,20 @@ in {
   #   matchBlocks = {
   #     "work-server" = {
   #       hostname = "internal.company.com";
-  #       user = "your-username";
-  #       identityFile = "~/.ssh/work_key";
+  #       user = username;
+  #       identityFile = config.age.secrets.ssh-work-key.path;  # User-level secret
   #     };
   #   };
+  # };
+  
+  # User-level secrets (managed by Home Manager/agenix) - defined in ./secrets.nix
+  # age.secrets.ssh-work-key = {
+  #   file = ./ssh-work-key.age;
+  #   path = "${config.home.homeDirectory}/.ssh/work_key";
+  # };
+  # age.secrets.api-tokens = {
+  #   file = ./api-tokens.age;
+  #   path = "${config.home.homeDirectory}/.config/work-tokens";
   # };
 
   # Work-specific shell aliases

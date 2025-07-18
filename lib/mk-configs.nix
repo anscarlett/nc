@@ -42,7 +42,7 @@ let
     let
       parts = lib.splitString "/" (lib.removeSuffix "/home.nix" path);
       filteredParts = builtins.filter (x: x != "") parts;
-      reversedParts = lib.lists.reverseList filteredParts;
+      reversedParts = lib.reverseList filteredParts;
     in builtins.concatStringsSep "-" reversedParts;
 in
 {

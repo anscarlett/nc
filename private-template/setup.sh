@@ -15,21 +15,21 @@ fi
 read -p "Enter your username: " USERNAME
 read -p "Enter your full name: " FULLNAME
 read -p "Enter your email: " EMAIL
-read -p "Enter your hostname (default: ct-laptop): " HOSTNAME
-HOSTNAME=${HOSTNAME:-ct-laptop}
+read -p "Enter your hostname (default: work-laptop): " HOSTNAME
+HOSTNAME=${HOSTNAME:-work-laptop}
 
 echo "📝 Updating configuration files..."
 
 # Update folder structure
-if [ -d "homes/ct/your-username" ]; then
-    mv "homes/ct/your-username" "homes/ct/$USERNAME"
-    echo "✅ Renamed user directory to homes/ct/$USERNAME"
+if [ -d "homes/work/your-username" ]; then
+    mv "homes/work/your-username" "homes/work/$USERNAME"
+    echo "✅ Renamed user directory to homes/work/$USERNAME"
 fi
 
 # Update home.nix
-if [ -f "homes/ct/$USERNAME/home.nix" ]; then
-    sed -i "s/Your Name/$FULLNAME/g" "homes/ct/$USERNAME/home.nix"
-    sed -i "s/your.email@company.com/$EMAIL/g" "homes/ct/$USERNAME/home.nix"
+if [ -f "homes/work/$USERNAME/home.nix" ]; then
+    sed -i "s/Your Name/$FULLNAME/g" "homes/work/$USERNAME/home.nix"
+    sed -i "s/your.email@company.com/$EMAIL/g" "homes/work/$USERNAME/home.nix"
     echo "✅ Updated home.nix with your details (username auto-derived from folder)"
 fi
 
@@ -60,12 +60,14 @@ echo "   # Copy the hash to the userPasswords section in hosts/ct/laptop/host.ni
 echo ""
 echo "2. Set up secrets (optional):"
 echo "   nix-shell -p age -p agenix --run 'age-keygen -o ~/.config/age/keys.txt'"
-echo "   # Update secrets/secrets.nix with your public key"
+echo "   # Update both secrets.nix files with your public key:"
+echo "   #   - hosts/work/laptop/secrets.nix"
+echo "   #   - homes/work/$USERNAME/secrets.nix"
 echo ""
 echo "3. Build your configuration:"
 echo "   sudo nixos-rebuild switch --flake .#$HOSTNAME"
 echo ""
 echo "4. Build home manager:"
-echo "   home-manager switch --flake .#$USERNAME-ct"
+echo "   home-manager switch --flake .#$USERNAME-work"
 echo ""
 echo "📚 See README.md for detailed instructions"

@@ -2,7 +2,7 @@
 
 let
   nameFromPath = import "${inputs.public-config}/lib/get-name-from-path.nix" { inherit lib; };
-  hostname = nameFromPath.getHostname ./.;  # Gets "ct-laptop" from folder structure
+  hostname = nameFromPath.getHostname ./.;  # Gets "work-laptop" from folder structure
 in {
   # Import the public core modules
   imports = [
@@ -16,7 +16,7 @@ in {
   ];
 
   # Work-specific configuration
-  networking.hostName = hostname;  # Automatically set from folder structure: ct-laptop
+  networking.hostName = hostname;  # Automatically set from folder structure: work-laptop
   
   # Example: Corporate VPN (if you have a custom module)
   # services.corporate-vpn.enable = true;
@@ -35,9 +35,17 @@ in {
   # security.ca-certificates.enable = true;
   
   # Example: Secrets management (uncomment when you set up secrets)
+  # System-level secrets (managed by NixOS/agenix) - defined in ./secrets.nix
   # age.secrets.work-wifi = {
-  #   file = ../../../secrets/work-wifi.age;
-  #   owner = "username-from-homes-folder";  # Will be auto-detected
+  #   file = ./work-wifi.age;
+  #   owner = "root";
+  #   group = "networkmanager";
+  #   mode = "0640";
+  # };
+  # age.secrets.vpn-config = {
+  #   file = ./vpn-config.age;
+  #   owner = "root";
+  #   group = "wheel";
   # };
   # Note: agenix module is automatically included from public-config
 
@@ -48,8 +56,8 @@ in {
     config.users.users
     # Host-specific overrides (uncomment to set password)
     {
-      # Set password for the auto-discovered user (your-username-ct)
-      # your-username-ct.hashedPassword = lib.mkForce "$6$rounds=4096$YOUR_GENERATED_HASH_HERE";
+      # Set password for the auto-discovered user (your-username-work)
+      # your-username-work.hashedPassword = lib.mkForce "$6$rounds=4096$YOUR_GENERATED_HASH_HERE";
     }
   ];
 }
