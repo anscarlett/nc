@@ -1,161 +1,303 @@
-# NixOS Configuration
+# NixOS Configuration Framework
 
-A minimal, modular NixOS system configuration using flakes with comprehensive YubiKey security integration.
+A modular, secure, and automated NixOS configuration system with Home Manager integration, featuring automatic discovery, secrets management, and comprehensive testing.
 
-## ⚡ Quick Start
+## ✨ Features
 
-1. **System setup**: Follow this README for basic NixOS configuration
-2. **YubiKey security**: See [docs/yubikey-overview.md](docs/yubikey-overview.md) for hardware security features
-3. **Customization**: See [docs/customisation.md](docs/customisation.md) for configuration details
+- **🔧 Modular Architecture**: Organized modules for core, desktop, server, and installer configurations
+- **🏠 Home Manager Integration**: Both NixOS module and standalone home-manager support
+- **🔍 Auto-Discovery**: Automatic detection of hosts and users from folder structure
+- **� Secrets Management**: Integrated agenix support with co-located secrets
+- **🖥️ Multiple Desktop Environments**: Hyprland, GNOME, KDE, DWM support
+- **🔑 YubiKey Integration**: LUKS, SSH, PAM, and GPG support with backup strategies
+- **🧪 Automated Testing**: Comprehensive test suite with CI/CD integration
+- **📊 Performance Monitoring**: Build optimization and health checks
+- **🔒 Private Repository Support**: Template for secure work configurations
 
-## 📚 Documentation
+## 🚀 Quick Start
 
-### 🔑 YubiKey Security Setup
-- **[YubiKey Overview](docs/yubikey-overview.md)** - Main guide with navigation paths
-- **[Quick Setup](docs/yubikey-quick-setup.md)** - Essential YubiKey setup in 30 minutes
-- **[Pre-deployment Checklist](docs/yubikey-checklist.md)** - What to prepare vs. on-site setup
-- **[Complete Reference](docs/yubikey-general.md)** - Comprehensive YubiKey guide (all features)
-- **[LUKS Installation Guide](docs/yubikey-luks.md)** - YubiKey LUKS setup for NixOS installer
+### For New Users
 
-### 🛠️ System Configuration
-- **[Customization Guide](docs/customisation.md)** - How to customize this configuration
-- **[VM Testing](docs/vm-testing.md)** - Testing configurations in virtual machines
-- **[Private Config Setup](docs/private-config.md)** - Using this config with private work repositories
-- **[Private Template](private-template/)** - Ready-to-use template for private repositories
-
-## 📁 Repository Structure
-
-```
-├── docs/              # 📚 All documentation
-├── hosts/             # 🖥️ NixOS system configurations
-│   ├── work/laptop/   #     → work-laptop
-│   │   ├── host.nix   #     System configuration
-│   │   └── secrets.nix #     System-level secrets (agenix/sops)
-│   └── home/legion/   #     → home-legion
-│       ├── host.nix   #     System configuration
-│       └── secrets.yaml #   System-level secrets (sops)
-├── homes/             # 🏠 Home Manager user configurations
-│   ├── work/user/     #     → user-work
-│   │   ├── home.nix   #     User configuration
-│   │   └── secrets.nix #     User-level secrets (agenix)
-│   └── home/user/     #     → user-home
-│       ├── home.nix   #     User configuration
-│       └── secrets.nix #     User-level secrets (agenix)
-├── modules/           # 📦 Reusable NixOS modules
-├── lib/               # 🔧 Helper functions and utilities
-├── scripts/           # 🚀 Utility scripts
-└── private-template/  # 📋 Template for private configurations
-```
-
-### 🔐 Secrets Management
-
-Secrets are co-located with their configurations:
-- **System secrets**: `hosts/*/secrets.nix` - WiFi, VPN, SSL certs (managed by NixOS)
-- **User secrets**: `homes/*/secrets.nix` - SSH keys, API tokens (managed by Home Manager)
-- **Both agenix and sops-nix** are supported for encryption
-│   └── home/legion/   #     → home-legion
-├── homes/             # 🏠 Home Manager user configurations  
-│   ├── ct/adrianscarlett/    #     → adrianscarlett-work
-│   └── home/adrian/   #     → adrian-home
-├── modules/           # 🧩 Reusable NixOS modules
-│   ├── core/          #     Essential system components
-│   ├── desktop/       #     Desktop environments (GNOME, Hyprland, etc.)
-│   └── disko-presets/ #     Disk partitioning templates
-├── lib/               # 🔧 Helper functions
-├── outputs/           # 📤 Flake outputs (auto-generated)
-├── scripts/           # 🛠️ Utility scripts
-└── flake.nix         # ❄️ Main flake configuration
-```
-
-## 🔧 Key Features
-
-- **🧩 Modular design** - Easy to customize and extend
-- **🔍 Auto-discovery** - Automatically finds hosts and users from folder structure
-- **🔐 YubiKey integration** - Hardware security for LUKS, SSH, 2FA, GPG
-- **💾 Disko support** - Declarative disk partitioning with encryption
-- **🏠 Home Manager** - User environment management integrated with NixOS
-- **🖥️ Multiple desktops** - GNOME, Hyprland, KDE, DWM support
-- **📱 VM testing** - Easy configuration testing in virtual machines
-
-## 🛡️ Security Features
-
-- **YubiKey LUKS unlock** - Disk encryption without passwords
-- **Hardware SSH keys** - SSH authentication via YubiKey
-- **2FA integration** - YubiKey as authenticator app
-- **GPG on hardware** - Signing and encryption keys on YubiKey
-- **PAM integration** - System login via YubiKey
-
-## 🏗️ How It Works
-
-### 🖥️ Hosts (System Configurations)
-```
-hosts/work/laptop/host.nix     → work-laptop
-hosts/home/legion/host.nix   → home-legion
-```
-
-### 🏠 Homes (User Configurations) 
-```
-homes/work/adrianscarlett/home.nix    → adrianscarlett-work
-homes/home/adrian/home.nix          → adrian-home
-```
-
-### 🔄 Auto-Discovery
-The configuration automatically discovers and builds all hosts and users from the folder structure - no manual registration needed!
-
-## 🚀 Usage
-
-### Building Complete Systems (NixOS + Home Manager)
+1. **Clone this repository**:
 ```bash
-# Build and switch to a system configuration (combines NixOS + Home Manager)
-sudo nixos-rebuild switch --flake .#work-laptop     # Build work laptop
-sudo nixos-rebuild switch --flake .#home-legion   # Build home Legion
-sudo nixos-rebuild switch --flake .#home-rock5b   # Build Rock5B server
-sudo nixos-rebuild switch --flake .#vm-test       # Build test VM
+git clone <your-repo-url> nixos-config
+cd nixos-config
 ```
 
-### Building Home Manager Only (Standalone)
+2. **Run health checks**:
 ```bash
-# If you want to use Home Manager standalone (not integrated with NixOS)
-home-manager switch --flake .#adrianscarlett-ct   # Build CT work profile
-home-manager switch --flake .#adrian-home         # Build home profile
+./scripts/health-check.sh
 ```
 
-## 🛠️ Setup Guide
-
-### 1. 🔐 Generate Password Hash
+3. **Create your first configuration**:
 ```bash
-./scripts/generate-password.sh yourpassword
+# For a new host
+mkdir -p hosts/home/your-hostname
+cp hosts/vm/test/host.nix hosts/home/your-hostname/
+
+# For a new user
+mkdir -p homes/home/your-username
+cp homes/home/adrian/home.nix homes/home/your-username/
 ```
 
-### 2. ⚙️ Configure Host
-Update your host configuration with the generated password hash (replace placeholder `$6$rounds=4096$...`).
+4. **Build and test**:
+```bash
+./scripts/test-all.sh
+```
 
-### 3. 🏗️ Build System
+### For Private/Work Configurations
+
+1. **Create a private repository** from the template:
+```bash
+cp -r private-template/ ../your-private-config
+cd ../your-private-config
+./setup.sh
+```
+
+2. **Follow the setup prompts** to configure your private environment.
+
+## 📁 Project Structure
+
+```
+├── flake.nix                  # Main flake configuration
+├── modules/                   # System modules
+│   ├── core/                  # Essential system configuration
+│   ├── desktop/               # Desktop environments
+│   ├── server/                # Server-specific modules
+│   └── installer/             # Installation helpers
+├── hosts/                     # Host configurations
+│   ├── home/                  # Personal machines
+│   ├── work/                  # Work machines
+│   └── vm/                    # Virtual machines
+├── homes/                     # User configurations
+│   ├── home/                  # Personal users
+│   └── work/                  # Work users
+├── lib/                       # Utility functions
+├── outputs/                   # Flake outputs
+├── docs/                      # Documentation
+├── scripts/                   # Automation scripts
+└── private-template/          # Template for private repos
+```
+
+## 🔧 Configuration
+
+### Adding a New Host
+
+1. Create the host directory:
+```bash
+mkdir -p hosts/context/hostname
+```
+
+2. Create `host.nix`:
+```nix
+{ lib, ... }:
+{
+  imports = [
+    ./hardware-configuration.nix  # Generate with nixos-generate-config
+    ../../modules/core
+    ../../modules/desktop/hyprland  # Choose your desktop
+  ];
+
+  # Host-specific configuration
+  networking.hostName = lib.mkDefault "hostname";
+  
+  # Override user passwords if needed
+  users.users."username".hashedPasswordFile = lib.mkForce "/path/to/password";
+}
+```
+
+### Adding a New User
+
+1. Create the user directory:
+```bash
+mkdir -p homes/context/username
+```
+
+2. Create `home.nix`:
+```nix
+{ lib, pkgs, username, homeDirectory, ... }:
+{
+  home = {
+    inherit username homeDirectory;
+    stateVersion = "25.05";
+  };
+
+  # User-specific packages and configuration
+  home.packages = with pkgs; [
+    firefox
+    git
+  ];
+}
+```
+
+### Desktop Environments
+
+Choose your desktop environment in the host configuration:
+
+- **Hyprland**: `../../modules/desktop/hyprland`
+- **GNOME**: `../../modules/desktop/gnome`
+- **KDE**: `../../modules/desktop/kde`
+- **DWM**: `../../modules/desktop/dwm`
+
+## 🔐 Secrets Management
+
+This configuration uses **co-located secrets** - secrets are stored alongside the configurations that use them:
+
+- **Host secrets**: `hosts/context/hostname/secrets.nix` (WiFi, VPN, system credentials)
+- **User secrets**: `homes/context/username/secrets.nix` (SSH keys, API tokens, personal credentials)
+
+### Setting Up Secrets
+
+1. **Install agenix**:
+```bash
+nix profile install github:ryantm/agenix
+```
+
+2. **Create host secrets**:
+```bash
+# In your host directory, e.g., hosts/home/legion/
+agenix -e secrets.nix
+```
+
+3. **Create user secrets**:
+```bash
+# In your user directory, e.g., homes/home/adrian/
+agenix -e secrets.nix
+```
+
+4. **Use in configuration**:
+```nix
+# hosts/home/legion/host.nix
+{
+  age.secrets = import ./secrets.nix;
+  
+  # Use the secrets
+  networking.wireless.networks."MyWiFi".pskFile = config.age.secrets."wifi-password".path;
+}
+```
+
+See [docs/secrets-management.md](docs/secrets-management.md) for detailed setup instructions.
+
+## 🧪 Testing & Validation
+
+### Run All Tests
+```bash
+./scripts/test-all.sh
+```
+
+### Specific Tests
+```bash
+./scripts/test-all.sh syntax    # Syntax validation
+./scripts/test-all.sh build     # Build tests
+./scripts/test-all.sh vm        # VM tests
+./scripts/health-check.sh       # Health checks
+```
+
+### VM Testing
+```bash
+./scripts/test-vm.sh           # Interactive VM testing
+```
+
+## 🚀 Building & Deployment
+
+### Build a configuration
+```bash
+nix build .#nixosConfigurations.hostname
+```
+
+### Build home-manager configuration
+```bash
+nix build .#homeConfigurations.username-context
+```
+
+### Switch to configuration
 ```bash
 sudo nixos-rebuild switch --flake .#hostname
 ```
 
-## 🎯 Design Philosophy
+### Apply home-manager
+```bash
+home-manager switch --flake .#username-context
+```
 
-- **Single responsibility** - Each file has one clear purpose
-- **Modular architecture** - Easy to maintain and extend
-- **Minimal main config** - `flake.nix` just combines modular pieces
-- **Auto-discovery** - No manual registration of hosts/users needed
+## 📊 Performance & Optimization
 
-## 📖 Getting Started
+The configuration includes build optimization features:
 
-### For New Users
-1. **🔍 Read the docs**: Start with [YubiKey Overview](docs/yubikey-overview.md) for security setup
-2. **⚡ Quick setup**: Use [Quick Setup Guide](docs/yubikey-quick-setup.md) for 30-minute YubiKey config
-3. **🎨 Customize**: See [Customization Guide](docs/customisation.md) for configuration options
-4. **🧪 Test safely**: Use [VM Testing](docs/vm-testing.md) before deploying to real hardware
+- **Binary caching** with Cachix integration
+- **Remote builders** for distributed builds
+- **Garbage collection** automation
+- **Performance monitoring** and metrics
 
-### Complete Setup Process
-1. Clone this repository
-2. Review [Customization Guide](docs/customisation.md) for your needs
-3. Configure your hosts in `hosts/` directory
-4. Configure your users in `homes/` directory  
-5. Follow [YubiKey setup](docs/yubikey-overview.md) for hardware security
-6. Build and deploy with `nixos-rebuild switch --flake .#hostname`
+Enable in your configuration:
+```nix
+{
+  imports = [ ./modules/build-optimization.nix ];
+}
+```
 
-For detailed setup instructions, see the documentation in the `docs/` folder.
+## � Health Monitoring
+
+Regular health checks ensure system reliability:
+
+```bash
+./scripts/health-check.sh all        # Full health check
+./scripts/health-check.sh discovery  # Auto-discovery check
+./scripts/health-check.sh secrets    # Secrets management check
+```
+
+## 📖 Documentation
+
+- **[Customisation Guide](docs/customisation.md)** - How to customize the configuration
+- **[Private Config Setup](docs/private-config.md)** - Setting up private repositories
+- **[Architecture Overview](docs/architecture.md)** - System architecture and diagrams
+- **[Secrets Management](docs/secrets-management.md)** - Co-located secrets setup and best practices
+- **[YubiKey Guides](docs/)** - Complete YubiKey integration documentation
+- **[VM Testing](docs/vm-testing.md)** - Virtual machine testing procedures
+
+## 🔄 CI/CD Integration
+
+The project includes GitHub Actions workflows for:
+
+- **Continuous Integration**: Automated testing and validation
+- **Security Scanning**: Code quality and security checks
+- **Performance Testing**: Build time monitoring
+- **Documentation**: Markdown linting and link checking
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Run tests: `./scripts/test-all.sh`
+5. Submit a pull request
+
+## 📄 License
+
+This configuration framework is open source. See individual components for their specific licenses.
+
+## 🆘 Troubleshooting
+
+### Common Issues
+
+1. **Build failures**: Run `./scripts/health-check.sh` to identify issues
+2. **Import errors**: Ensure all imports use root-relative paths (`./`)
+3. **User conflicts**: Check that usernames follow the context-aware naming pattern
+4. **Secrets issues**: Verify agenix keys are properly configured
+
+### Getting Help
+
+- Check the [documentation](docs/) for detailed guides
+- Run health checks for system diagnostics
+- Review test output for specific error messages
+- Consult the architecture diagrams for system understanding
+
+## 🔄 Updates
+
+Keep your configuration up to date:
+
+```bash
+nix flake update                    # Update inputs
+./scripts/test-all.sh               # Validate changes
+./scripts/health-check.sh           # Check system health
+```

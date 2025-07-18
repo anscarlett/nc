@@ -1,4 +1,4 @@
-# Create names from paths (e.g., homes/ct/adrian.scarlett -> adrian.scarlett-ct or hosts/ct/laptop -> laptop-ct)
+# Create names from paths (e.g., homes/work/adrian.scarlett -> adrian.scarlett-work or hosts/work/laptop -> laptop-work)
 { lib }:
 let
   # Function to get a name from a path with configurable options

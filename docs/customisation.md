@@ -96,7 +96,7 @@ For now, you need to manually specify which users and home configurations to use
   # Link to specific home manager configs
   home-manager.users = {
     adrian = import ../../../homes/home/adrian/home.nix inputs;
-    adrianscarlett = import ../../../homes/ct/adrianscarlett/home.nix inputs;
+    adrianscarlett = import ../../../homes/work/adrianscarlett/home.nix inputs;
   };
 }
 ```
@@ -107,7 +107,7 @@ For now, you need to manually specify which users and home configurations to use
 
 The goal is to have users automatically created based on your `homes/` directory structure:
 - `homes/home/adrian/home.nix` → Automatically creates system user `adrian`
-- `homes/ct/adrianscarlett/home.nix` → Automatically creates system user `adrianscarlett`
+- `homes/work/adrianscarlett/home.nix` → Automatically creates system user `adrianscarlett`
 
 This feature is being developed and will be available in a future update.
 
@@ -117,7 +117,7 @@ Different hosts can use different combinations of users:
 
 **Work Laptop**:
 ```nix
-home-manager.users.adrianscarlett = import ../../../homes/ct/adrianscarlett/home.nix inputs;
+home-manager.users.adrianscarlett = import ../../../homes/work/adrianscarlett/home.nix inputs;
 ```
 
 **Personal Desktop**:

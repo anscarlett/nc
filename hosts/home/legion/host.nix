@@ -21,23 +21,15 @@ in {
   networking.hostName = hostname;
   
   imports = [
-    ./common.nix
-    ./modules/core
-    ./modules/desktop
+    ../../modules/core
+    ../../modules/desktop/hyprland
     # inputs.nixos-hardware.nixosModules.lenovo-legion  # Module may not exist
   ];
   
     # Users are automatically created by core module from homes directory
-  # Override password for all auto-discovered users
-  users.users = let
-    # Get usernames from home directories
-    autoUsers = import ../../../lib/auto-users.nix { inherit lib pkgs; };
-    usernames = builtins.attrNames (autoUsers.mkUsers ../../../homes);
-    # Create password overrides for each discovered user
-    passwordOverrides = lib.genAttrs usernames (username: {
-      hashedPassword = lib.mkForce "$6$hUZs3UqzsRWgkcP/$6iooTMSWqeFwn12p9zucgvNGuKIqPSFXX5dgKrxpnp7JfyFogP/hup8/0x3ihIIaXZS.t68/L8McEk23WXJLj/";
-    });
-  in passwordOverrides;
+  # Override specific user settings
+  users.users.adrian-home.hashedPassword = lib.mkForce "$6$hUZs3UqzsRWgkcP/$6iooTMSWqeFwn12p9zucgvNGuKIqPSFXX5dgKrxpnp7JfyFogP/hup8/0x3ihIIaXZS.t68/L8McEk23WXJLj/";
+  users.users.adrianscarlett-work.hashedPassword = lib.mkForce "$6$hUZs3UqzsRWgkcP/$6iooTMSWqeFwn12p9zucgvNGuKIqPSFXX5dgKrxpnp7JfyFogP/hup8/0x3ihIIaXZS.t68/L8McEk23WXJLj/";
   
   # Secrets configuration
   sops.secrets.mysecret = {

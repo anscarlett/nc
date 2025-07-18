@@ -30,7 +30,6 @@ in {
   services.openssh.settings.PasswordAuthentication = lib.mkForce true;
   
   imports = [
-    ../../../common.nix
     ../../../modules/core
     ../../../modules/desktop/hyprland
   ];

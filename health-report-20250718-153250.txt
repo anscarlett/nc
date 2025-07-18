@@ -1,0 +1,60 @@
+=========================================
+NixOS Configuration Health Report
+Date: Fri 18 Jul 15:32:50 BST 2025
+Repository: /home/adrianscarlett/projects/nixos/nc
+=========================================
+
+[0;34m[2025-07-18 15:32:50][0m Checking auto-discovery system...
+[0;32m✅ auto-users.nix found[0m
+[0;32m✅ mk-configs.nix found[0m
+[0;32m✅ get-name-from-path.nix found[0m
+[0;34mℹ️  Found 5 host configurations[0m
+[0;34mℹ️  Found 2 home configurations[0m
+
+[0;34m[2025-07-18 15:32:50][0m Checking secrets management...
+[0;32m✅ Agenix input found in flake.nix[0m
+[0;34mℹ️  Found 6 co-located secrets files[0m
+[0;32m✅ No global secrets file (correct - using co-located secrets)[0m
+[0;32m✅ Password management helper found[0m
+[0;34mℹ️  Found 14 SSH public keys[0m
+
+[0;34m[2025-07-18 15:32:50][0m Checking configuration consistency...
+[0;32m✅ No outdated references found in configuration files[0m
+[1;33m⚠️  Found 10 potentially problematic relative imports[0m
+/home/adrianscarlett/projects/nixos/nc/hosts/home/legion/host.nix:  btrfsPreset = import ../../../modules/disko-presets/btrfs-flex.nix;
+/home/adrianscarlett/projects/nixos/nc/hosts/home/legion/host.nix:  nameFromPath = import ../../../lib/get-name-from-path.nix { inherit lib; };
+/home/adrianscarlett/projects/nixos/nc/hosts/home/rock5b/host.nix:  btrfsPreset = import ../../../modules/disko-presets/btrfs-flex.nix;
+[1;33m⚠️  Found potential hardcoded user configurations in hosts[0m
+/home/adrianscarlett/projects/nixos/nc/hosts/home/legion/host.nix:  users.users.adrian-home.hashedPassword = lib.mkForce "$6$hUZs3UqzsRWgkcP/$6iooTMSWqeFwn12p9zucgvNGuKIqPSFXX5dgKrxpnp7JfyFogP/hup8/0x3ihIIaXZS.t68/L8McEk23WXJLj/";
+/home/adrianscarlett/projects/nixos/nc/hosts/home/legion/host.nix:  users.users.adrianscarlett-work.hashedPassword = lib.mkForce "$6$hUZs3UqzsRWgkcP/$6iooTMSWqeFwn12p9zucgvNGuKIqPSFXX5dgKrxpnp7JfyFogP/hup8/0x3ihIIaXZS.t68/L8McEk23WXJLj/";
+/home/adrianscarlett/projects/nixos/nc/hosts/home/rock5b/host.nix:  users.users.adrian-home.hashedPassword = lib.mkForce "$6$hUZs3UqzsRWgkcP/$6iooTMSWqeFwn12p9zucgvNGuKIqPSFXX5dgKrxpnp7JfyFogP/hup8/0x3ihIIaXZS.t68/L8McEk23WXJLj/";
+
+[0;34m[2025-07-18 15:32:50][0m Checking build optimization...
+[0;32m✅ Build optimization module found[0m
+[0;34mℹ️  No user nix.conf found[0m
+[0;34mℹ️  System nix.conf exists[0m
+
+[0;34m[2025-07-18 15:32:50][0m Checking documentation...
+[0;34mℹ️  Found 11 documentation files[0m
+[0;32m✅ customisation.md found[0m
+[0;32m✅ private-config.md found[0m
+[0;32m✅ architecture.md found[0m
+[0;32m✅ README.md found[0m
+
+[0;34m[2025-07-18 15:32:50][0m Checking system resources...
+[0;32m✅ Disk space: 1878GB available[0m
+[0;34mℹ️  Memory usage: 60%[0m
+[0;34mℹ️  Nix store size: 13G[0m
+
+[0;34m[2025-07-18 15:32:52][0m Checking Git repository...
+[0;34mℹ️  Uncommitted changes present[0m
+[0;32m✅ .gitignore found[0m
+[0;32m✅ result in .gitignore[0m
+[0;32m✅ *.qcow2 in .gitignore[0m
+[0;32m✅ secrets.yaml in .gitignore[0m
+
+=========================================
+Health Check Summary
+=========================================
+[0;32m✅ All health checks passed! 🎉[0m
+Report saved to: /home/adrianscarlett/projects/nixos/nc/health-report-20250718-153250.txt

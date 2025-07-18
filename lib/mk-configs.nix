@@ -8,7 +8,9 @@ let
     basePath ? dir
   }:
     let
-      contents = builtins.readDir dir;
+      # Check if directory exists before trying to read it
+      dirExists = builtins.pathExists dir;
+      contents = if dirExists then builtins.readDir dir else {};
       
       processItem = name: type:
         let
