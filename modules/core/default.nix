@@ -1,5 +1,28 @@
 # Core system configuration that applies to all hosts
-{ config, pkgs, lib, ... }: {
+{ config, pkgs, lib, inputs ? null, ... }: 
+
+let
+  # Only use auto-users if inputs are available (for flake-based systems)
+  autoUsers = if inputs != null 
+    then import ../../lib/auto-users.nix { inherit lib pkgs; }
+    else null;
+    
+  # Auto-create users from homes directory if available
+  autoCreatedUsers = if autoUsers != null && builtins.pathExists ../../homes
+    then autoUsers.autoCreateUsers {
+      homesDir = ../../homes;
+      # Default passwords can be overridden in individual hosts
+    }
+    else {};
+    
+  # Auto-create home manager users if available  
+  autoHomeManagerUsers = if autoUsers != null && inputs != null && builtins.pathExists ../../homes
+    then autoUsers.autoCreateHomeManagerUsers {
+      homesDir = ../../homes;
+      inherit inputs;
+    }
+    else {};
+in {
   # Enable flakes and nix-command
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
   
@@ -24,12 +47,14 @@
 
   # Basic packages - sound is configured in desktop module
 
-  # User management
+  # User management - automatically created from homes directory
   users.mutableUsers = false;  # Manage users through Nix only
   
-  # Users are now automatically created from home manager configurations
-  # See lib/auto-users.nix for the implementation
-  # Individual hosts can override user settings and set passwords
+  # Auto-create users from home manager configurations
+  users.users = autoCreatedUsers;
+  
+  # Home Manager - auto-assign discovered users
+  home-manager.users = autoHomeManagerUsers;
   
   # Enable zsh system-wide
   programs.zsh = {

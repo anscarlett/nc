@@ -26,18 +26,21 @@ Once the VM starts, you can test:
 
 ### 2. Desktop Environment (Hyprland)
 - **First boot**: Hyprland will start automatically
-- **Initial setup**: Copy the example config:
+- **Initial setup**: Run the setup script:
   ```bash
-  mkdir -p ~/.config/hypr
-  cp /home/adrianscarlett/projects/nixos/nc/examples/hyprland.conf ~/.config/hypr/
+  setup-hypr-config
   ```
-- **Key bindings**:
-  - `Super + Q`: Open terminal (Alacritty)
-  - `Super + R`: Open application launcher (Wofi)
-  - `Super + C`: Close window
-  - `Super + M`: Exit Hyprland
-  - `Super + 1-9`: Switch workspaces
-  - `Super + Shift + 1-9`: Move window to workspace
+  This copies the optimized VM configuration to your user directory.
+- **Key bindings** (VM-optimized):
+  - `Alt + Q`: Open terminal (Alacritty)
+  - `Alt + R`: Open application launcher (Wofi)
+  - `Alt + C`: Close window
+  - `Alt + M`: Exit Hyprland
+  - `Alt + 1-9`: Switch workspaces
+  - `Alt + Shift + 1-9`: Move window to workspace
+  - `Ctrl + Alt + T`: Open terminal (familiar shortcut)
+  - `Ctrl + Alt + L`: Lock screen
+  - `Ctrl + Alt + Del`: Exit Hyprland
 - **Status bar**: Waybar should appear at the top
 - **Notifications**: Mako handles notifications
 

@@ -37,19 +37,16 @@ in {
     ../../../modules/desktop/hyprland
   ];
   
-  # Users - manually created for now (can be automated later)
-  users.users = {
-    adrian = {
-      isNormalUser = true;
-      extraGroups = [ "wheel" "networkmanager" "audio" "video" ];
-      shell = pkgs.zsh;
-      password = "adrian";  # Simple password for VM testing
-    };
-    
-    # Enable root login for testing
-    root.password = "nixos";
-  };
-  
-  # Home Manager - specify which config to use
-  home-manager.users.adrian = import ../../../homes/home/adrian/home.nix inputs;
+  # Users are automatically created by core module from homes directory
+  # Override specific settings for VM testing
+  users.users = lib.mkMerge [
+    # Auto-created users from core module
+    config.users.users
+    # VM-specific overrides
+    {
+      # Simple passwords for VM testing
+      adrian.password = lib.mkForce "adrian";
+      root.password = lib.mkForce "nixos";
+    }
+  ];
 }

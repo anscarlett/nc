@@ -20,6 +20,8 @@ A minimal, modular NixOS system configuration using flakes with comprehensive Yu
 ### 🛠️ System Configuration
 - **[Customization Guide](docs/customisation.md)** - How to customize this configuration
 - **[VM Testing](docs/vm-testing.md)** - Testing configurations in virtual machines
+- **[Private Config Setup](docs/private-config.md)** - Using this config with private work repositories
+- **[Private Template](private-template/)** - Ready-to-use template for private repositories
 
 ## 📁 Repository Structure
 
