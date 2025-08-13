@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# VM testing script for NixOS configuration
 echo "🚀 Testing NixOS configuration in VM"
 
 CONFIG_NAME="${1:-vm-test}"
@@ -19,6 +18,8 @@ echo "To SSH: ssh -p 2222 adrian@localhost"
 echo "To stop VM: Ctrl+C or shutdown from inside VM"
 echo ""
 
-# Run the VM
 VM_SCRIPT=$(find result/bin -name "run-*-vm" | head -1)
+
+export QEMU_OPTS="-virtfs local,path=/home/adrianscarlett/projects,mount_tag=host_projects,security_model=none"
+
 "$VM_SCRIPT" -m $MEMORY -smp $CORES

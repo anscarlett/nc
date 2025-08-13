@@ -14,6 +14,8 @@
     waybar          # Status bar
     swww            # Wallpaper daemon
     swaylock-fancy  # Lock screen
+    swaybg          # Background setting utility
+    
     wl-clipboard    # Clipboard
     mako           # Notification daemon for Wayland
     wofi           # Application launcher
@@ -64,6 +66,7 @@
     exec-once = waybar &
     exec-once = mako &
     exec-once = swww init
+    exec-once = swaybg -c "#000000"
 
     # Environment variables
     env = XCURSOR_SIZE,24
