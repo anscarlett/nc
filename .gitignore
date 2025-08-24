@@ -1,0 +1,55 @@
+# Nix build results
+result
+result-*
+
+# Age keys (NEVER commit these!)
+*.txt
+keys.txt
+.config/age/keys.txt
+
+# Decrypted secrets (should always be encrypted .age files)
+secrets/*.key
+secrets/*.pem
+secrets/*.crt
+secrets/*.conf
+secrets/decrypted-*
+
+# Backup files that might contain sensitive data
+*.backup
+yubikey-backup.txt
+oath-backup.txt
+*-backup.txt
+
+# Temporary files
+.tmp/
+*.tmp
+*.log
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# VM disk images
+*.qcow2
+*.img
+
+# Password files (if anyone accidentally creates them)
+password.txt
+passwords.txt
+*password*
+
+# Common secret file patterns
+*.secret
+*.private
+*_key
+*_token
+
+# Flake lock (uncomment if you want to pin versions)
+# flake.lock
