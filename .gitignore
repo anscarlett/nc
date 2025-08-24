@@ -37,19 +37,19 @@ oath-backup.txt
 Thumbs.db
 
 # VM disk images
-*.qcow2
-*.img
+**/*.qcow2
+**/*.img
 
 # Password files (if anyone accidentally creates them)
-password.txt
-passwords.txt
-*password*
+**/password.txt
+**/passwords.txt
+**/password*
 
 # Common secret file patterns
-*.secret
-*.private
-*_key
-*_token
+**/*.secret
+**/*.private
+**/*_key
+**/*_token
 
 # Flake lock (uncomment if you want to pin versions)
 # flake.lock
